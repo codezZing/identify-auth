@@ -1,0 +1,32 @@
+version: '3'
+services:
+  identify-auth:
+    image: identify-auth:1.2
+    restart: always
+    ports:
+     - 5050:5050
+    links:
+     - mongodb
+    depends_on:
+     - mongodb
+    # volumes:
+    #   - "./entrypoint.sh:/entrypoint.sh"
+    # entrypoint: /entrypoint.sh -d mongodb:27017 -c 'echo "start web service here"';
+  mongodb:
+    image: mongo
+    ports:
+     - 27017:27017
+    environment:
+     - MONGO_INITDB_ROOT_USERNAME=admin
+     - MONGO_INITDB_ROOT_PASSWORD=password
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+     - 8081:8081
+    depends_on:
+     - mongodb
+    environment:
+     - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+     - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+     - ME_CONFIG_MONGODB_SERVER=mongodb
